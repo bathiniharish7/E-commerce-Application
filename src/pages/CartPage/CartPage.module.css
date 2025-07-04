@@ -1,0 +1,11 @@
+.cartPage{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+}
+.payButton{
+    font-size: 2rem;
+    
+
+}
