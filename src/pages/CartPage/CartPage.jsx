@@ -10,8 +10,7 @@ function CartPage() {
 
   const totalAmount = cartProducts.reduce((accumulator,currentProduct)=>{
     return  accumulator = accumulator + currentProduct.price
-  },0)
-
+  },0).toFixed(2);
   
   return (
     <div className={styles.cartPage}>
