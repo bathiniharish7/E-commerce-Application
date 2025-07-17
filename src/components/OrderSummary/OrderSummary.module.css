@@ -1,12 +1,13 @@
-orderSummary{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.orderSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
+
 .title {
   text-align: center;
   font-size: 2rem;
-  margin: 20px 0;
+ 
   color: #333;
   font-weight: bold;
 }
@@ -39,14 +40,15 @@ orderSummary{
   background-color: #f1f1f1;
 }
 
-
-.payButton{
-    width: 100%;
-    font-size: 1.2rem !important;
-    background-color: rgb(255, 206, 12) !important;
-    color: black !important;
-    font-weight: 550 !important;
+.scrollWrapper {
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-
-
+.payButton {
+  width: 100%;
+  font-size: 1.2rem !important;
+  background-color: rgb(255, 206, 12) !important;
+  color: black !important;
+  font-weight: 550 !important;
+}
