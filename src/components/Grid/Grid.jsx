@@ -5,9 +5,12 @@ import { addToCart, removeFromCart } from '../../redux/cartSlice/cartSlice';
 
 const GridLayout = ({ children, minWidth = '200px', gap = '1rem' ,products}) => {
   const dispatch = useDispatch();
-  const gridStyle = {
+const isMobile = window.innerWidth < 500;
+const finalMinWidth = isMobile ? '100%' : minWidth;
+
+const gridStyle = {
   display: 'grid',
-  gridTemplateColumns: `repeat(auto-fill, minmax(${minWidth}, 1fr))`,
+  gridTemplateColumns: `repeat(auto-fill, minmax(${finalMinWidth}, 1fr))`,
   gap,
   justifyContent: 'center',
 };
@@ -16,7 +19,7 @@ const GridLayout = ({ children, minWidth = '200px', gap = '1rem' ,products}) => 
   // 🔥 Event Delegation Handler
   const handleClick = (e) => {
     const action = e.target.getAttribute('data-action');
-    console.log("HIIIIIIIII");
+   
     
     if (!action) return; // skip non-button clicks
 

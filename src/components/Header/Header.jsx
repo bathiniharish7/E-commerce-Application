@@ -12,7 +12,7 @@ function Header() {
   
 
   return (
-    <header>
+    <header className={styles.header}>
       <nav className={styles.navBar}>
         <ul className={styles.navList}>
           <li className={styles.link}>
