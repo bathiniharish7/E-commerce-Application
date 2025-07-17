@@ -1,0 +1,52 @@
+orderSummary{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin: 20px 0;
+  color: #333;
+  font-weight: bold;
+}
+
+.table {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fafafa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.heading {
+  background-color: #2d72d9;
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.table th,
+.table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tableRow:hover {
+  background-color: #f1f1f1;
+}
+
+
+.payButton{
+    width: 100%;
+    font-size: 1.2rem !important;
+    background-color: rgb(255, 206, 12) !important;
+    color: black !important;
+    font-weight: 550 !important;
+}
+
+
+
