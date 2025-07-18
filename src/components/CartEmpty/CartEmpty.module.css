@@ -1,0 +1,32 @@
+.cartEmptyContainer{
+    
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    
+
+
+   
+
+
+}
+.cartEmptyImage{
+    height: 230px;
+}
+.cartEmptyTitle{
+    font-size: 2rem;
+    font-weight: 550;
+}
+
+@media(max-width:500px){
+    .cartEmptyImage{
+    height: 150px;
+   }
+   .cartEmptyTitle{
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+}
