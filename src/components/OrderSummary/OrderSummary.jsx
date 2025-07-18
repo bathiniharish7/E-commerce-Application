@@ -9,7 +9,7 @@ function OrderSummary() {
 
   return (
     <div className={styles.orderSummary}>
-      <h3 className={styles.title}>Order Summary</h3>
+      <h3 className={styles.title}>Cart Summary</h3>
 
 <div>
           <table className={styles.table}>
