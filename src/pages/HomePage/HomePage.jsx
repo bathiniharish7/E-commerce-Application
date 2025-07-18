@@ -1,87 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchProducts, searchProducts } from '../../api/HomePageApi';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import styles from './HomePage.module.css';
 import { TextField } from '@mui/material';
 import GridLayout from '../../components/Grid/Grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, removeFromCart } from '../../redux/cartSlice/cartSlice';
+import debounce from 'lodash.debounce'; // 👈 Install this if not available
+import Loader from '../../components/Loader/Loader';
 
 function HomePage() {
-  const [products, setProducts] = useState([]);
   const [input, setInput] = useState('');
   const dispatch = useDispatch();
   const cartProducts = useSelector((state) => state.cart.products);
-  console.log("HIII");
-  
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (input) {
-        searchProductsData();
-      } else {
-        getProductsData();
-      }
-    }, 600);
+  const queryKey = input.trim() ? ['products', input] : ['products'];
 
-    return () => clearTimeout(timer);
-  }, [input]);
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey,
+    queryFn: () => {
+      return input
+        ? searchProducts(input.trim())
+        : fetchProducts();
+    },
+    select: (data) => data.products,
+    staleTime: 1000 * 60 * 5,
+    keepPreviousData: true,
 
-  const getProductsData = async () => {
-    try {
-      const data = await fetchProducts();
-      setProducts(data.products);
-    } catch (e) {
-      console.log(e.message);
-    }
+  });
+
+
+  const debouncedSetInput = debounce(setInput, 500);
+
+  const handleChange = (e) => {
+    debouncedSetInput(e.target.value);
   };
 
-  const searchProductsData = async () => {
-    try {
-      const data = await searchProducts(input);
-      setProducts(data.products);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
-  // 🔥 Event Delegation Handler
-  const handleClick = (e) => {
-    const action = e.target.getAttribute('data-action');
-    if (!action) return; // skip non-button clicks
-
-    const productDiv = e.target.closest('[data-product-id]');
-    const productId = productDiv?.getAttribute('data-product-id');
-    const product = products.find((p) => p.id.toString() === productId);
-
-    if (product) {
-      console.log(`Clicked: ${action}`, product);
-     
-    }
-  };
+  const products = data || [];
 
   return (
     <div className={styles.homePage}>
-      <p style={{margin:'0 auto'}}>Total Products: {products.length}</p>
+
+      <p style={{ margin: '0 auto' }}>Total Products: {products.length}</p>
+
       <TextField
         id="outlined-basic"
-        label={`Search Products`}
+        label="Search Products"
         variant="outlined"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={handleChange}
       />
-      <GridLayout minWidth="200px" products={products}>
-        {products.map((product) => {
-          const presentInCart = cartProducts.some((p) => p.id === product.id);
-          return (
-            <ProductCard
-              key={product.id}
-              product={product}
-              presentInCart={presentInCart}
-            />
-          );
-        })}
-      </GridLayout>
+
+      {isLoading ? (
+        <Loader />
+      ) : isError ? (
+        <p>Error fetching products.</p>
+      ) : (
+        <GridLayout minWidth="200px" products={products}>
+          {products.map((product) => {
+            const presentInCart = cartProducts.some((p) => p.id === product.id);
+            return (
+              <ProductCard
+                key={product.id}
+                product={product}
+                presentInCart={presentInCart}
+              />
+            );
+          })}
+        </GridLayout>
+      )}
     </div>
   );
 }
