@@ -1,15 +1,21 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import HomePage from '../pages/HomePage/HomePage'
-import CartPage from '../pages/CartPage/CartPage'
+import React, { Suspense, lazy } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Loader from '../components/Loader/Loader';
+
+
+// Lazy loaded pages
+const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
+const CartPage = lazy(() => import('../pages/CartPage/CartPage'));
 
 function AppRoutes() {
   return (
-    <Routes>
-        <Route path='/' element={<HomePage/>}/>
-        <Route path='/cart' element={<CartPage/>}/>
-    </Routes>
-  )
+    <Suspense fallback={<Loader/>}>
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/cart' element={<CartPage />} />
+      </Routes>
+    </Suspense>
+  );
 }
 
-export default AppRoutes
+export default AppRoutes;
