@@ -3,6 +3,11 @@
     padding-bottom: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+
+
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 @media(max-width:500px){

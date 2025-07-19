@@ -5,7 +5,7 @@ function Loader() {
   return (
     <div className={styles.loaderContainer}>
 
-        <CircularProgress/> <span>Loading</span>
+        <CircularProgress/> <span className={styles.loaderTitle}>Loading</span>
       
     </div>
   )

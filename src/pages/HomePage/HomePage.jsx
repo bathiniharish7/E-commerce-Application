@@ -46,11 +46,11 @@ function HomePage() {
   return (
     <div className={styles.homePage}>
 
-      <p style={{ margin: '0 auto' }}>Total Products: {products.length}</p>
+      {/* <p style={{ margin: '0 auto' }}>Total Products: {products.length}</p> */}
 
       <TextField
         id="outlined-basic"
-        label="Search Products"
+        label="Search from 194 Products"
         variant="outlined"
         onChange={handleChange}
       />
