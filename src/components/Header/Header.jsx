@@ -3,12 +3,15 @@ import { NavLink } from 'react-router-dom';
 import styles from './Header.module.css';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/images/amazon-logo.svg'
+import Badge from '@mui/material/Badge';
+import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 function Header() {
   const cartProducts = useSelector((state) => state.cart.products);
-
+  const totalProducts = cartProducts.length? cartProducts.length :0;
   return (
     <header className={styles.header}>
       <nav className={styles.navBar}>
+        
         <ul className={styles.navList}>
           <li >
             <NavLink
@@ -26,7 +29,8 @@ function Header() {
                 `${styles.linkItem} ${isActive ? styles.active : ''}`
               }
             >
-              Home
+             Home
+             
             </NavLink>
           </li>
           <li className={styles.link}>
@@ -36,7 +40,11 @@ function Header() {
                 `${styles.linkItem} ${isActive ? styles.active : ''}`
               }
             >
-              Cart ({cartProducts.length})
+
+               <Badge badgeContent={totalProducts} color="primary">
+                  <ShoppingCartRoundedIcon sx={{ color: 'white' }}/>
+               </Badge>
+              
             </NavLink>
           </li>
         </ul>
