@@ -9,7 +9,7 @@ const CartPage = lazy(() => import('../pages/CartPage/CartPage'));
 
 function AppRoutes() {
   return (
-    <Suspense fallback={<Loader/>}>
+    <Suspense fallback={<p></p>}>
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/cart' element={<CartPage />} />
