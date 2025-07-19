@@ -9,3 +9,9 @@
     gap: 0.8rem;
 
 }
+
+@media(max-width:500px){
+    .homePage{
+        padding: 0 1rem;
+    }
+}

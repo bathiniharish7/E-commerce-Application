@@ -47,8 +47,9 @@
 
 .payButton {
   width: 100%;
-  font-size: 1.2rem !important;
-  background-color: rgb(255, 206, 12) !important;
+  font-size: 1rem !important;
+  background-color: orange !important;  /* matching navbar */
   color: black !important;
   font-weight: 550 !important;
+  
 }

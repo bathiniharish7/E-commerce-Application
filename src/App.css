@@ -1,4 +1,12 @@
 .app{
     padding: 0 1rem;
     padding-bottom: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media(max-width:500px){
+    .app{
+        padding: 0px;
+    }
 }
