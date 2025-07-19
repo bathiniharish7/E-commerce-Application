@@ -1,35 +1,34 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styles from './Header.module.css';
 import { useSelector } from 'react-redux';
 
 function Header() {
-  const location = useLocation().pathname; // location.pathname is the current path
-  console.log(location);
-
-  const cartProducts = useSelector((state)=>state.cart.products);
-
-  
+  const cartProducts = useSelector((state) => state.cart.products);
 
   return (
     <header className={styles.header}>
       <nav className={styles.navBar}>
         <ul className={styles.navList}>
           <li className={styles.link}>
-            <Link
+            <NavLink
               to="/"
-              className={location === '/' ? styles.active : styles.active}
+              className={({ isActive }) =>
+                `${styles.linkItem} ${isActive ? styles.active : ''}`
+              }
             >
               Home
-            </Link>
+            </NavLink>
           </li>
           <li className={styles.link}>
-            <Link
+            <NavLink
               to="/cart"
-              className={location === '/cart' ? styles.active : styles.active}
+              className={({ isActive }) =>
+                `${styles.linkItem} ${isActive ? styles.active : ''}`
+              }
             >
               Cart ({cartProducts.length})
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </nav>

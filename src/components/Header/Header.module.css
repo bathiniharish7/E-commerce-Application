@@ -29,3 +29,6 @@
 .link a:hover {
   background-color: rgb(110, 110, 117);
 }
+.active {
+  background-color: rgb(72, 72, 80); /* Highlight for active link */
+}
