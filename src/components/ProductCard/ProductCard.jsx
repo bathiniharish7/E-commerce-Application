@@ -19,9 +19,9 @@ function ProductCard({ product, presentInCart }) {
           <h3>Price: ₹{product.price}/-</h3>
         </div>
         {presentInCart ? (
-          <Button variant="contained" data-action="remove" style={{ backgroundColor: '#e04d28', color: 'white' }}>Remove from Cart</Button>
+          <Button variant="contained" data-action="remove" style={{ backgroundColor: '#e04d28', color: 'white',borderRadius:'25px',textTransform:'none' }}>Remove from Cart</Button>
         ) : (
-          <Button variant="contained" data-action="add">Add to Cart</Button>
+          <Button variant="contained" data-action="add" style={{color: 'white',borderRadius:'25px',textTransform:'none' }}>Add to Cart</Button>
         )}
       </div>
     </div>

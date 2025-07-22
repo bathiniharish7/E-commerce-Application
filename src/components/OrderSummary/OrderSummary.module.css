@@ -51,6 +51,7 @@
   background-color: orange !important;  /* matching navbar */
   color: black !important;
   font-weight: 550 !important;
+  border-radius: 25px !important;
   
 }
 

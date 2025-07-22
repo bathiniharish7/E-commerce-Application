@@ -42,7 +42,7 @@ function Header() {
             >
 
                <Badge badgeContent={totalProducts} color="primary">
-                  <ShoppingCartRoundedIcon sx={{ color: 'white' }}/>
+                  <ShoppingCartRoundedIcon sx={{ color: 'white',fontSize:'1.6rem' }}/>
                </Badge>
               
             </NavLink>
