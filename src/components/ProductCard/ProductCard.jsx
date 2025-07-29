@@ -7,7 +7,7 @@ function ProductCard({ product, presentInCart }) {
   return (
     <div className={styles.productCard} data-product-id={product.id}>
       <div className={styles.imageWrapper}>
-        <img src={product.thumbnail} alt={product.title} className={styles.image} />
+        <img src={product.thumbnail} loading='lazy' alt={product.title} className={styles.image} />
       </div>
       <div className={styles.contentWrapper}>
         <div>
