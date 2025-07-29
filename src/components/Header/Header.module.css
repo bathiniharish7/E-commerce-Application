@@ -39,6 +39,24 @@
   background-color: #084c94; /* Deep blue for active link */
 }
 
+.logoContainer{
+  height: 50px;
+  /* width: 50px; */
+  background-color: rgb(255, 166, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+  padding: 1rem 0.5rem;
+
+  text-decoration: none;
+  gap: 0.4rem;
+  border-radius: 10px;
+
+}
+.logoTitle{
+  color: black;
+}
 .logo {
   height: 30px;
 }

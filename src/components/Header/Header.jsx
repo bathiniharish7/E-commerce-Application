@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import logo from '../../assets/images/amazon-logo.svg'
 import Badge from '@mui/material/Badge';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 function Header() {
   const cartProducts = useSelector((state) => state.cart.products);
   const totalProducts = cartProducts.length? cartProducts.length :0;
@@ -19,9 +20,24 @@ function Header() {
               className={ styles.logoContainer
               }
             >
-              <img src={logo} alt=""  className={styles.logo}/>
+             <div className={styles.logoContainer}>
+              <ShoppingBagOutlinedIcon sx={{
+                fontSize:'30px',
+                color:'black'
+              }}/>
+              <h3 className={styles.logoTitle}>Amazon</h3>
+             </div>
             </NavLink>
           </li>
+          {/* <li >
+            <NavLink
+              to="/"
+              className={ styles.logoContainer
+              }
+            >
+              <img src={logo} alt=""  className={styles.logo}/>
+            </NavLink>
+          </li> */}
           <li className={styles.link}>
             <NavLink
               to="/"
