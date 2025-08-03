@@ -1,8 +1,18 @@
+@font-face {
+  font-family: 'Pacifico';
+  src: url('/fonts/Pacifico-Regular.woff2') format('woff2'),
+       url('/fonts/Pacifico-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 .header {
   position: sticky;
   top: 0;
   z-index: 5;
-  padding: 1.5rem;
+  padding: 1rem;
    background-color: #328ce6;
 }
 
@@ -23,8 +33,8 @@
 
 .link a {
   text-decoration: none;
-  padding: 0.88rem 1.5rem;
-  font-size: 1.25rem;
+  padding: 0.88rem 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: white;
   border-radius: 0.5rem;
@@ -47,15 +57,18 @@
   justify-content: center;
   align-items: center;
  
-  padding: 1rem 0.5rem;
+  padding: 1.8rem 0.5rem;
 
   text-decoration: none;
-  gap: 0.4rem;
+  gap: 0.2rem;
   border-radius: 10px;
 
 }
 .logoTitle{
   color: black;
+ font-family: 'Pacifico', cursive;
+  font-size: 1.8rem;
+  font-weight: 900;
 }
 .logo {
   height: 30px;

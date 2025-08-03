@@ -25,7 +25,7 @@ function Header() {
                 fontSize:'30px',
                 color:'black'
               }}/>
-              <h3 className={styles.logoTitle}>Amazon</h3>
+              <h3 className={styles.logoTitle}>Shop</h3>
              </div>
             </NavLink>
           </li>
