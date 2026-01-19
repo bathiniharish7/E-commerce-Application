@@ -1,61 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Button from '@mui/material/Button';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  setCategory,
-  setPriceRange,
-  setRating,
-  resetFilters
-} from '../../redux/filterSlice/filterSlice';
+import React, { useEffect, useState } from "react";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Button from "@mui/material/Button";
+import { useSearchParams } from "react-router-dom";
 
 function FilterComponent() {
-  const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const { category, priceRange, rating } = useSelector(
-    (state) => state.filters
-  );
-
+  const category = searchParams.get("category") || "all";
+  const priceRange = searchParams.get("price") || "all";
+  const rating = searchParams.get("rating") || "all";
 
   const [categories, setCategories] = useState([]);
 
+  // ---------------------------
+  // Fetch categories
+  // ---------------------------
   useEffect(() => {
-    fetch('https://dummyjson.com/products/category-list')
-      .then(res => res.json())
-      .then(data => setCategories(data));
+    fetch("https://dummyjson.com/products/category-list")
+      .then((res) => res.json())
+      .then((data) => setCategories(data));
   }, []);
 
-    // ✅ check if any filter is selected
+  // ---------------------------
+  // Update URL
+  // ---------------------------
+  const updateParam = (key, value) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value === "all") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+
+    setSearchParams(params);
+  };
+
+  const resetFilters = () => {
+    setSearchParams({});
+  };
+
   const isAnyFilterApplied =
-    category !== 'all' ||
-    priceRange !== 'all' ||
-    rating !== 'all';
+    category !== "all" ||
+    priceRange !== "all" ||
+    rating !== "all";
 
   return (
     <div
       style={{
-        display: 'flex',
-        gap: '16px',
-        overflowX: 'auto',
-        whiteSpace: 'nowrap',
-        paddingTop: '10px',
-        alignItems: 'center'
+        display: "flex",
+        gap: "16px",
+        overflowX: "auto",
+        whiteSpace: "nowrap",
+        paddingTop: "10px",
+        alignItems: "center",
       }}
     >
-
-      {/* Category */}
+      {/* CATEGORY */}
       <FormControl size="small" sx={{ minWidth: 160 }}>
         <InputLabel>Category</InputLabel>
         <Select
           label="Category"
           value={category}
-          onChange={(e) => dispatch(setCategory(e.target.value))}
+          onChange={(e) =>
+            updateParam("category", e.target.value)
+          }
         >
           <MenuItem value="all">All</MenuItem>
-          {categories.map(cat => (
+          {categories.map((cat) => (
             <MenuItem key={cat} value={cat}>
               {cat}
             </MenuItem>
@@ -63,29 +78,36 @@ function FilterComponent() {
         </Select>
       </FormControl>
 
-      {/* Price */}
-      <FormControl size="small" sx={{ minWidth: 160 }}>
+      {/* PRICE */}
+      <FormControl size="small" sx={{ minWidth: 170 }}>
         <InputLabel>Price</InputLabel>
         <Select
           label="Price"
           value={priceRange}
-          onChange={(e) => dispatch(setPriceRange(e.target.value))}
+          onChange={(e) =>
+            updateParam("price", e.target.value)
+          }
         >
           <MenuItem value="all">All</MenuItem>
-          <MenuItem value="100-3000">₹100 – ₹3,000</MenuItem>
-          <MenuItem value="3000-6000">₹3,000 – ₹6,000</MenuItem>
-          <MenuItem value="6000-9000">₹6,000 – ₹9,000</MenuItem>
-          <MenuItem value="9000-12000">₹9,000 – ₹12,000</MenuItem>
+          <MenuItem value="0-2000">₹0 – ₹2,000</MenuItem>
+          <MenuItem value="2000-4000">₹2,000 – ₹4,000</MenuItem>
+          <MenuItem value="4000-6000">₹4,000 – ₹6,000</MenuItem>
+          <MenuItem value="6000-8000">₹6,000 – ₹8,000</MenuItem>
+          <MenuItem value="8000-10000">₹8,000 – ₹10,000</MenuItem>
+          <MenuItem value="10000-12000">₹10,000 – ₹12,000</MenuItem>
+          <MenuItem value="12000-999999">₹12,000+</MenuItem>
         </Select>
       </FormControl>
 
-      {/* Rating */}
+      {/* RATING */}
       <FormControl size="small" sx={{ minWidth: 160 }}>
         <InputLabel>Rating</InputLabel>
         <Select
           label="Rating"
           value={rating}
-          onChange={(e) => dispatch(setRating(e.target.value))}
+          onChange={(e) =>
+            updateParam("rating", e.target.value)
+          }
         >
           <MenuItem value="all">All</MenuItem>
           <MenuItem value="4">⭐ 4 & above</MenuItem>
@@ -95,17 +117,16 @@ function FilterComponent() {
         </Select>
       </FormControl>
 
-     {/* ✅ Reset Button (conditional) */}
+      {/* RESET */}
       {isAnyFilterApplied && (
         <Button
           variant="outlined"
-          onClick={() => dispatch(resetFilters())}
-          sx={{ color: '#3d4042' }}
+          onClick={resetFilters}
+          sx={{ color: "#3d4042" }}
         >
           Reset
         </Button>
       )}
-
     </div>
   );
 }
