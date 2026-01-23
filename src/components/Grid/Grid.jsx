@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Grid.module.css';
 import { useDispatch } from 'react-redux';
-import { addToCart, removeFromCart } from '../../redux/cartSlice/cartSlice';
+import { addToCart, decreaseQuantity, increaseQuantity } from '../../redux/cartSlice/cartSlice';
 
 const GridLayout = ({ children, minWidth = '200px', gap = '1rem' ,products}) => {
   const dispatch = useDispatch();
@@ -17,29 +17,37 @@ const gridStyle = {
 
 
   // 🔥 Event Delegation Handler
-  const handleClick = (e) => {
-    const action = e.target.getAttribute('data-action');
-   
-    
-    if (!action) return; // skip non-button clicks
+// 🔥 Event Delegation Handler
+const handleClick = (e) => {
+  const action = e.target.getAttribute("data-action");
+  if (!action) return;
 
-    const productDiv = e.target.closest('[data-product-id]');
-    const productId = productDiv?.getAttribute('data-product-id');
-    const product = products.find((p) => p.id.toString() === productId);
+  const productDiv = e.target.closest("[data-product-id]");
+  const productId = productDiv?.getAttribute("data-product-id");
+  if (!productId) return;
 
-    if (product) {
-      console.log(`Clicked:${action}`, product);
-      if (action === 'add') {
-        dispatch(addToCart(product));
-      } else if (action === 'remove') {
-        dispatch(removeFromCart(product.id));
-      }
-    }
-  };
+  const product = products.find(
+    (p) => p.id.toString() === productId
+  );
+
+  if (!product) return;
+
+  if (action === "add") {
+    dispatch(addToCart(product));
+  }
+
+  if (action === "increase") {
+    dispatch(increaseQuantity(product.id));
+  }
+
+  if (action === "decrease") {
+    dispatch(decreaseQuantity(product.id));
+  }
+};
+
 
   return (
-    <div className={styles.grid} style={gridStyle} onClick={handleClick
-    }>
+    <div className={styles.grid} style={gridStyle} >
       {children}
     </div>
   );

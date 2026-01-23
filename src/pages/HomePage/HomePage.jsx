@@ -17,7 +17,7 @@ function HomePage() {
   const [searchParams] = useSearchParams();
 
   // 🛒 cart only from redux
-  const cartProducts = useSelector((state) => state.cart.products);
+  const cartProducts = useSelector((state) => state.cart.cartItems);
 
   // ✅ READ FILTERS FROM URL (single source of truth)
   const category = searchParams.get("category") || "all";
@@ -114,8 +114,8 @@ function HomePage() {
       ) : (
         <GridLayout minWidth="200px" products={filteredProducts}>
           {filteredProducts.map((product) => {
-            const presentInCart = cartProducts.some(
-              (p) => p.id === product.id
+            const presentInCart = Object.keys(cartProducts).some(
+              (productId) =>Number(productId) === product.id
             );
 
             return (

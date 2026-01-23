@@ -7,26 +7,32 @@ import Badge from '@mui/material/Badge';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 function Header() {
-  const cartProducts = useSelector((state) => state.cart.products);
-  const totalProducts = cartProducts.length? cartProducts.length :0;
+  const cartProducts = useSelector((state) => state.cart.cartItems);
+
+  // total quantity in cart :
+  const totalProducts = Object.keys(cartProducts).reduce(
+    (total, productId) =>
+      total + cartProducts[productId].quantity,
+    0
+  );
   return (
     <header className={styles.header}>
       <nav className={styles.navBar}>
-        
+
         <ul className={styles.navList}>
           <li >
             <NavLink
               to="/"
-              className={ styles.logoContainer
+              className={styles.logoContainer
               }
             >
-             <div className={styles.logoContainer}>
-              <ShoppingBagOutlinedIcon sx={{
-                fontSize:'30px',
-                color:'black'
-              }}/>
-              <h3 className={styles.logoTitle}>Shop</h3>
-             </div>
+              <div className={styles.logoContainer}>
+                <ShoppingBagOutlinedIcon sx={{
+                  fontSize: '30px',
+                  color: 'black'
+                }} />
+                <h3 className={styles.logoTitle}>Shop</h3>
+              </div>
             </NavLink>
           </li>
           {/* <li >
@@ -45,8 +51,8 @@ function Header() {
                 `${styles.linkItem} ${isActive ? styles.active : ''}`
               }
             >
-             Home
-             
+              Home
+
             </NavLink>
           </li>
           <li className={styles.link}>
@@ -57,10 +63,10 @@ function Header() {
               }
             >
 
-               <Badge badgeContent={totalProducts} color="primary">
-                  <ShoppingCartRoundedIcon sx={{ color: 'white',fontSize:'1.6rem' }}/>
-               </Badge>
-              
+              <Badge badgeContent={totalProducts} color="primary">
+                <ShoppingCartRoundedIcon sx={{ color: 'white', fontSize: '1.6rem' }} />
+              </Badge>
+
             </NavLink>
           </li>
         </ul>

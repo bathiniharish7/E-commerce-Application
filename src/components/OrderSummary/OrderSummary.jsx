@@ -4,8 +4,14 @@ import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 
 function OrderSummary() {
-  const cartProducts = useSelector((state) => state.cart.products);
-  const totalAmount = cartProducts.reduce((acc, current) => acc + current.price, 0).toFixed(2);
+  const cartProducts = useSelector((state) => state.cart.cartItems);
+  const totalAmount = Object.keys(cartProducts).reduce(
+  (acc, productId) => {
+    const item = cartProducts[productId];
+    return acc + item.productDetails.price * item.quantity;
+  },
+  0
+).toFixed(2);
 
   return (
     <div className={styles.orderSummary}>
@@ -18,6 +24,8 @@ function OrderSummary() {
             <td>Sl.No</td>
             <td>Product Name</td>
             <td>Price</td>
+             <td>Qunatity</td>
+
           </tr>
         </thead>
       </table>
@@ -25,13 +33,18 @@ function OrderSummary() {
       <div className={styles.scrollWrapper}>
         <table className={styles.table}>
           <tbody>
-            {cartProducts.map((product, index) => (
-              <tr className={styles.tableRow} key={index}>
+            {Object.keys(cartProducts).map((productId, index) => {
+
+              const product = cartProducts[productId].productDetails;
+             
+              return <tr className={styles.tableRow} key={index}>
                 <td>{index + 1}</td>
                 <td>{product.title}</td>
                 <td>₹{product.price}/-</td>
+                 <td>{cartProducts[productId].quantity}</td>
+
               </tr>
-            ))}
+})}
           </tbody>
         </table>
       </div>

@@ -7,19 +7,22 @@ import OrderSummary from '../../components/OrderSummary/OrderSummary';
 import CartEmpty from '../../components/CartEmpty/CartEmpty';
 
 function CartPage() {
-  const cartProducts = useSelector((state) => state.cart.products);
+  const cartProducts = useSelector((state) => state.cart.cartItems);
 
   return (
     <>
-      {cartProducts.length === 0 ? (
+      {Object.keys(cartProducts).length === 0 ? (
         <CartEmpty />
       ) : (
         <div className={styles.cartPage}>
           <OrderSummary />
 
           <GridLayout minWidth="200px" products={cartProducts}>
-            {cartProducts.map((product) => {
-              const presentInCart = cartProducts.some((p) => p.id === product.id);
+            {Object.keys(cartProducts).map((productId) => {
+              const product = cartProducts[productId].productDetails;
+               const presentInCart = Object.keys(cartProducts).some(
+              (productId) =>Number(productId) === product.id
+            );
               return (
                 <ProductCard
                   key={product.id}
