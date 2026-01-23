@@ -1,59 +1,73 @@
-import React from 'react';
-import styles from './OrderSummary.module.css';
-import { useSelector } from 'react-redux';
-import { Button } from '@mui/material';
+import React from "react";
+import { useSelector } from "react-redux";
+import { Button, Paper } from "@mui/material";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+
+import styles from "./OrderSummary.module.css";
 
 function OrderSummary() {
   const cartProducts = useSelector((state) => state.cart.cartItems);
-  const totalAmount = Object.keys(cartProducts).reduce(
-  (acc, productId) => {
-    const item = cartProducts[productId];
-    return acc + item.productDetails.price * item.quantity;
-  },
-  0
-).toFixed(2);
+
+  const totalAmount = Object.keys(cartProducts)
+    .reduce((acc, productId) => {
+      const item = cartProducts[productId];
+      return acc + item.productDetails.price * item.quantity;
+    }, 0)
+    .toFixed(2);
 
   return (
     <div className={styles.orderSummary}>
       <h3 className={styles.title}>CART SUMMARY</h3>
 
-<div>
-          <table className={styles.table}>
-        <thead>
-          <tr className={styles.heading}>
-            <td>Sl.No</td>
-            <td>Product Name</td>
-            <td>Price</td>
-             <td>Qunatity</td>
+      {/* ✅ Scrollable + Sticky Header */}
+      <TableContainer component={Paper} sx={{ maxHeight: 250 }}>
+        <Table stickyHeader size="small" sx={{ tableLayout: "fixed" }}>
+          <TableHead>
+            <TableRow
+              sx={{
+                "& th": {
+                  backgroundColor: "#2d72d9",
+                  color: "#fff",
+                  fontWeight: 600,
+                },
+              }}
+            >
+              <TableCell>Sl.No</TableCell>
+              <TableCell>Product Name</TableCell>
+              <TableCell align="center">Quantity</TableCell>
+              <TableCell align="right">Price</TableCell>
+            </TableRow>
+          </TableHead>
 
-          </tr>
-        </thead>
-      </table>
-
-      <div className={styles.scrollWrapper}>
-        <table className={styles.table}>
-          <tbody>
+          <TableBody>
             {Object.keys(cartProducts).map((productId, index) => {
-
               const product = cartProducts[productId].productDetails;
-             
-              return <tr className={styles.tableRow} key={index}>
-                <td>{index + 1}</td>
-                <td>{product.title}</td>
-                <td>₹{product.price}/-</td>
-                 <td>{cartProducts[productId].quantity}</td>
+              const quantity = cartProducts[productId].quantity;
 
-              </tr>
-})}
-          </tbody>
-        </table>
-      </div>
-</div>
+              return (
+                <TableRow key={productId} hover>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{product.title}</TableCell>
+                  <TableCell align="center">{quantity}</TableCell>
+                  <TableCell align="right">
+                    ₹{product.price}/-
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       <Button
         variant="contained"
-        onClick={() => alert('This feature is under development')}
         className={styles.payButton}
+        onClick={() => alert("This feature is under development")}
       >
         Pay Total Amount : ₹{totalAmount}/-
       </Button>
