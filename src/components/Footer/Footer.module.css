@@ -1,0 +1,15 @@
+.footerHeading{
+    background-color: #37475A;
+    text-align: center;
+    color: white;
+}
+.detailsContainer{
+    padding: 1rem;
+    background-color: #232f3e;
+    text-align: center;
+    color: white;
+}
+.footer{
+    position: sticky;
+    bottom: 0px;
+}
