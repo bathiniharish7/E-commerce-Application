@@ -33,6 +33,22 @@ const cartSlice = createSlice({
       } else {
         delete state.cartItems[productId];
       }
+    },
+
+    // update cart with lates api details
+    updateCartProductDetails: (state, action) => {
+      const latestProducts = action.payload;
+
+      latestProducts.forEach((product) => {
+        const productId = product.id;
+
+        if (state.cartItems[productId]) {
+          state.cartItems[productId].productDetails = {
+            ...state.cartItems[productId].productDetails,
+            ...product
+          };
+        }
+      });
     }
   }
 });
@@ -40,7 +56,8 @@ const cartSlice = createSlice({
 export const {
   addToCart,
   increaseQuantity,
-  decreaseQuantity
+  decreaseQuantity,
+  updateCartProductDetails
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
