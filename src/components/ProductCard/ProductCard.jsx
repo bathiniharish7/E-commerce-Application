@@ -35,7 +35,7 @@ function ProductCard({ product, presentInCart }) {
           <Button variant="contained" data-action="add" style={{ color: 'white', borderRadius: '25px', textTransform: 'none' }}>Add to Cart</Button>
         )} */}
 
-{presentInCart === false && (<Button variant="contained" data-action="add" style={{ color: 'white', borderRadius: '25px', textTransform: 'none' }} onClick={()=>dispatch(addToCart(product))}>Add to Cart</Button>
+{presentInCart === false && (<Button variant="contained" data-action="add" style={{ color: 'white', borderRadius: '25px', textTransform: 'none' }} onClick={()=>dispatch(addToCart(product.id))}>Add to Cart</Button>
       )}
 
 {presentInCart &&  <ButtonGroup

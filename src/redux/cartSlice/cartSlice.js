@@ -7,14 +7,13 @@ const cartSlice = createSlice({
   },
   reducers: {
     addToCart: (state, action) => {
-      const productDetails = action.payload;
-      const productId = productDetails.id;
+      const productId = action.payload;
+      
 
       if (state.cartItems[productId]) {
         state.cartItems[productId].quantity += 1;
       } else {
         state.cartItems[productId] = {
-          productDetails,
           quantity: 1
         };
       }
@@ -35,20 +34,8 @@ const cartSlice = createSlice({
       }
     },
 
-    // update cart with lates api details
-    updateCartProductDetails: (state, action) => {
-      const latestProducts = action.payload;
-
-      latestProducts.forEach((product) => {
-        const productId = product.id;
-
-        if (state.cartItems[productId]) {
-          state.cartItems[productId].productDetails = {
-            ...state.cartItems[productId].productDetails,
-            ...product
-          };
-        }
-      });
+    clearCart: (state) => {
+      state.cartItems = {};
     }
   }
 });
@@ -57,7 +44,7 @@ export const {
   addToCart,
   increaseQuantity,
   decreaseQuantity,
-  updateCartProductDetails
+  clearCart
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

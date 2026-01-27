@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import GridLayout from "../../components/Grid/Grid";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
@@ -8,65 +8,69 @@ import Loader from "../../components/Loader/Loader";
 import styles from "./CartPage.module.css";
 
 import { fetchProductDetails } from "../../api/CartPageApi";
-import { updateCartProductDetails } from "../../redux/cartSlice/cartSlice";
 
 function CartPage() {
-  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const cartProducts = useSelector((state) => state.cart.cartItems);
+  // get product ids
+  const productIds = useMemo(
+    () => Object.keys(cartItems),
+    []
+  );
 
-  // stable ids
-  const productIds = useMemo(() => {
-    return Object.keys(cartProducts);
-  }, [cartProducts]);
-
+  // call API only once when cart is opened
   useEffect(() => {
     if (productIds.length === 0) return;
 
-    const fetchLatestCart = async () => {
+    const fetchProducts = async () => {
       setLoading(true);
-
       try {
         const results = await Promise.allSettled(
           productIds.map((id) => fetchProductDetails(id))
         );
 
         const successProducts = results
-          .filter((res) => res.status === "fulfilled")
-          .map((res) => res.value);
+          .filter((r) => r.status === "fulfilled")
+          .map((r) => r.value);
 
-        dispatch(updateCartProductDetails(successProducts));
-      } catch (error) {
-        console.error(error);
+        setProducts(successProducts);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchLatestCart();
+    fetchProducts();
   }, []);
 
-  if (loading) return <Loader />;
+  // ✅ FILTER UI BASED ON REDUX
+  const visibleProducts = useMemo(() => {
+    return products.filter(
+      (product) => cartItems[product.id]?.quantity > 0
+    );
+  }, [products, cartItems]);
 
-  if (productIds.length === 0) return <CartEmpty />;
+  if (loading) return <Loader />;
+  if (visibleProducts.length === 0) return <CartEmpty />;
 
   return (
     <div className={styles.cartPage}>
-      <OrderSummary />
+      <OrderSummary
+        cartProductsList={visibleProducts}
+        cartProducts={cartItems}
+      />
 
-      <GridLayout minWidth="200px" products={cartProducts}>
-        {productIds.map((id) => {
-          const product = cartProducts[id].productDetails;
-
-          return (
-            <ProductCard
-              key={product.id}
-              product={product}
-              presentInCart={true}
-            />
-          );
-        })}
+      <GridLayout minWidth="200px">
+        {visibleProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            quantity={cartItems[product.id]?.quantity}
+            presentInCart
+          />
+        ))}
       </GridLayout>
     </div>
   );

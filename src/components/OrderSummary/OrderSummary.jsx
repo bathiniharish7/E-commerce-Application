@@ -1,5 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Button, Paper } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,31 +9,27 @@ import TableRow from "@mui/material/TableRow";
 
 import styles from "./OrderSummary.module.css";
 
-function OrderSummary() {
-  const cartProducts = useSelector((state) => state.cart.cartItems);
+function OrderSummary({ cartProducts, cartProductsList }) {
 
-  const totalAmount = Object.keys(cartProducts)
-    .reduce((acc, productId) => {
-      const item = cartProducts[productId];
-      return acc + item.productDetails.price * item.quantity;
-    }, 0)
-    .toFixed(2);
+  const totalAmount = cartProductsList.reduce((total, product) => {
+    const quantity = cartProducts[product.id]?.quantity || 0;
+    return total + product.price * quantity;
+  }, 0);
 
   return (
     <div className={styles.orderSummary}>
       <h3 className={styles.title}>CART SUMMARY</h3>
 
-      {/* ✅ Scrollable + Sticky Header */}
       <TableContainer component={Paper} sx={{ maxHeight: 250 }}>
-        <Table stickyHeader size="small" sx={{ tableLayout: "fixed" }}>
+        <Table stickyHeader size="small">
           <TableHead>
             <TableRow
               sx={{
                 "& th": {
                   backgroundColor: "#2d72d9",
                   color: "#fff",
-                  fontWeight: 600,
-                },
+                  fontWeight: 600
+                }
               }}
             >
               <TableCell>Sl.No</TableCell>
@@ -45,17 +40,16 @@ function OrderSummary() {
           </TableHead>
 
           <TableBody>
-            {Object.keys(cartProducts).map((productId, index) => {
-              const product = cartProducts[productId].productDetails;
-              const quantity = cartProducts[productId].quantity;
+            {cartProductsList.map((product, index) => {
+              const quantity = cartProducts[product.id]?.quantity || 0;
 
               return (
-                <TableRow key={productId} hover>
+                <TableRow key={product.id} hover>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{product.title}</TableCell>
                   <TableCell align="center">{quantity}</TableCell>
                   <TableCell align="right">
-                    ₹{product.price}/-
+                    ₹{product.price}
                   </TableCell>
                 </TableRow>
               );
@@ -69,7 +63,7 @@ function OrderSummary() {
         className={styles.payButton}
         onClick={() => alert("This feature is under development")}
       >
-        Pay Total Amount : ₹{totalAmount}/-
+        Pay Total Amount : ₹{totalAmount.toFixed(2)}/-
       </Button>
     </div>
   );
