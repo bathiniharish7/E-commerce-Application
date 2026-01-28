@@ -1,4 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProducts, searchProducts } from "../../api/HomePageApi";
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -14,17 +19,28 @@ import { useSearchParams } from "react-router-dom";
 
 function HomePage() {
   const [input, setInput] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filterLoading,setFilterLoading] = useState(false);
+
+  const workerRef = useRef(null);
   const [searchParams] = useSearchParams();
 
-  // 🛒 cart only from redux
-  const cartProducts = useSelector((state) => state.cart.cartItems);
+  // Read cart items from redux
+  const cartProducts = useSelector(
+    (state) => state.cart.cartItems
+  );
 
-  // ✅ READ FILTERS FROM URL (single source of truth)
+  // get filters from URL
   const category = searchParams.get("category") || "all";
   const priceRange = searchParams.get("price") || "all";
   const rating = searchParams.get("rating") || "all";
 
-  // 🔹 React Query
+  const isAnyFilterApplied =
+    category !== "all" ||
+    priceRange !== "all" ||
+    rating !== "all";
+
+  // React Query
   const queryKey = input.trim()
     ? ["products", input]
     : ["products"];
@@ -44,7 +60,9 @@ function HomePage() {
     keepPreviousData: true,
   });
 
-  // 🔹 Debounced search
+  const products = data || [];
+
+  // Debounce search
   const debouncedSetInput = useMemo(
     () => debounce(setInput, 500),
     []
@@ -54,59 +72,60 @@ function HomePage() {
     debouncedSetInput(e.target.value);
   };
 
-  const products = data || [];
+  // Initialize the  web worker in the useEffect
+  useEffect(() => {
+    workerRef.current = new Worker(
+      new URL("../../web-workers/filterWorker.js", import.meta.url)
+    );
 
-  // ✅ check if any filter applied
-  const isAnyFilterApplied =
-    category !== "all" ||
-    priceRange !== "all" ||
-    rating !== "all";
+    workerRef.current.onmessage = (e) => {
+      // console.log("web workers filtered data",e.data);
+      
+      setFilteredProducts(e.data);
+      setFilterLoading(false);
+    };
 
-  // ✅ FILTER USING URL VALUES
-  const filteredProducts = useMemo(() => {
-    if (!isAnyFilterApplied) return products;
+    return () => {
+      workerRef.current.terminate();
+    };
+  }, []);
 
-    return products.filter((product) => {
-      // Category
-      if (category !== "all" && product.category !== category) {
-        return false;
-      }
+  // when filters applied Send data to web worker for filtering the products
+  useEffect(() => {
+    if (!products.length) return;
 
-      // Price
-      if (priceRange !== "all") {
-        const [min, max] = priceRange.split("-").map(Number);
-        if (product.price < min || product.price > max) {
-          return false;
-        }
-      }
+    if (!isAnyFilterApplied) {
+      setFilteredProducts(products);
+      return;
+    }
 
-      // Rating
-      if (rating !== "all" && product.rating < Number(rating)) {
-        return false;
-      }
-
-      return true;
+    setFilterLoading(true);
+    workerRef.current.postMessage({
+      products,
+      category,
+      priceRange,
+      rating,
     });
-  }, [products, category, priceRange, rating]);
+  }, [products, category, priceRange, rating, isAnyFilterApplied]);
 
   return (
     <div className={styles.homePage}>
-      {/* 🔍 Search */}
+      {/* Search Component*/}
       <TextField
         size="small"
-        label={`Search ${products.length} products`}
+        label={`Search ${products.length>0?products.length:''} products`}
         variant="outlined"
         onChange={handleChange}
       />
 
-      {/* 🎛 Filters */}
+      {/* Filters Component */}
       {!isLoading && <FilterComponent />}
 
-      {!isLoading && filteredProducts.length === 0 && (
+       {/* show no products when there are no products */}
+      {!isLoading && filteredProducts.length === 0 && filterLoading === false && (
         <NoProducts />
       )}
 
-      {/* 🧾 Content */}
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -114,8 +133,10 @@ function HomePage() {
       ) : (
         <GridLayout minWidth="200px" products={filteredProducts}>
           {filteredProducts.map((product) => {
-            const presentInCart = Object.keys(cartProducts).some(
-              (productId) =>Number(productId) === product.id
+            const presentInCart = Object.keys(
+              cartProducts
+            ).some(
+              (id) => Number(id) === product.id
             );
 
             return (
