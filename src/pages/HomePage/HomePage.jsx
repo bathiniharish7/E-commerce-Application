@@ -9,38 +9,41 @@ import { fetchProducts, searchProducts } from "../../api/HomePageApi";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import styles from "./HomePage.module.css";
 import { TextField } from "@mui/material";
-import GridLayout from "../../components/Grid/Grid";
 import { useSelector } from "react-redux";
 import debounce from "lodash.debounce";
 import Loader from "../../components/Loader/Loader";
 import FilterComponent from "../../components/Filter/FilterComponent";
 import NoProducts from "../../components/NoProducts/NoProducts";
 import { useSearchParams } from "react-router-dom";
+import VirtualizedGrid from "../../components/VirtualizedGrid/VirtualizedGrid";
 
 function HomePage() {
   const [input, setInput] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [filterLoading,setFilterLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState(false);
 
   const workerRef = useRef(null);
   const [searchParams] = useSearchParams();
 
-  // Read cart items from redux
+  // 🛒 Cart from redux
   const cartProducts = useSelector(
     (state) => state.cart.cartItems
   );
 
-  // get filters from URL
+  // 🔎 URL filters
   const category = searchParams.get("category") || "all";
   const priceRange = searchParams.get("price") || "all";
   const rating = searchParams.get("rating") || "all";
 
-  const isAnyFilterApplied =
-    category !== "all" ||
-    priceRange !== "all" ||
-    rating !== "all";
+  const isAnyFilterApplied = useMemo(() => {
+    return (
+      category !== "all" ||
+      priceRange !== "all" ||
+      rating !== "all"
+    );
+  }, [category, priceRange, rating]);
 
-  // React Query
+  // 🔥 React Query
   const queryKey = input.trim()
     ? ["products", input]
     : ["products"];
@@ -62,7 +65,7 @@ function HomePage() {
 
   const products = data || [];
 
-  // Debounce search
+  // ⏳ Debounced search
   const debouncedSetInput = useMemo(
     () => debounce(setInput, 500),
     []
@@ -72,15 +75,16 @@ function HomePage() {
     debouncedSetInput(e.target.value);
   };
 
-  // Initialize the  web worker in the useEffect
+  // 🧵 Initialize Web Worker
   useEffect(() => {
     workerRef.current = new Worker(
-      new URL("../../web-workers/filterWorker.js", import.meta.url)
+      new URL(
+        "../../web-workers/filterWorker.js",
+        import.meta.url
+      )
     );
 
     workerRef.current.onmessage = (e) => {
-      // console.log("web workers filtered data",e.data);
-      
       setFilteredProducts(e.data);
       setFilterLoading(false);
     };
@@ -90,9 +94,16 @@ function HomePage() {
     };
   }, []);
 
-  // when filters applied Send data to web worker for filtering the products
+  // ✅ Set initial products
   useEffect(() => {
-    if (!products.length) return;
+    if (products.length) {
+      setFilteredProducts(products);
+    }
+  }, [products]);
+
+  // 🔥 FILTER LOGIC (FIXED)
+  useEffect(() => {
+    if (!workerRef.current) return;
 
     if (!isAnyFilterApplied) {
       setFilteredProducts(products);
@@ -100,6 +111,7 @@ function HomePage() {
     }
 
     setFilterLoading(true);
+
     workerRef.current.postMessage({
       products,
       category,
@@ -110,29 +122,32 @@ function HomePage() {
 
   return (
     <div className={styles.homePage}>
-      {/* Search Component*/}
+      {/* 🔍 Search */}
       <TextField
+        sx={{ padding: "0 0.5rem" }}
         size="small"
-        label={`Search ${products.length>0?products.length:''} products`}
+        label={`Search products`}
         variant="outlined"
         onChange={handleChange}
       />
 
-      {/* Filters Component */}
+      {/* 🎯 Filters */}
       {!isLoading && <FilterComponent />}
 
-       {/* show no products when there are no products */}
-      {!isLoading && filteredProducts.length === 0 && filterLoading === false && (
-        <NoProducts />
-      )}
+      {/* 🚫 No Products */}
+      {!isLoading &&
+        filteredProducts.length === 0 &&
+        !filterLoading && <NoProducts />}
 
-      {isLoading ? (
+      {/* 🔄 Loader */}
+      {isLoading || filterLoading ? (
         <Loader />
       ) : isError ? (
         <p>Error fetching products.</p>
       ) : (
-        <GridLayout minWidth="200px" products={filteredProducts}>
-          {filteredProducts.map((product) => {
+        <VirtualizedGrid
+          data={filteredProducts}
+          renderItem={(product) => {
             const presentInCart = Object.keys(
               cartProducts
             ).some(
@@ -146,8 +161,8 @@ function HomePage() {
                 presentInCart={presentInCart}
               />
             );
-          })}
-        </GridLayout>
+          }}
+        />
       )}
     </div>
   );

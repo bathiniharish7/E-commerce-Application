@@ -56,7 +56,12 @@ function FilterComponent() {
         overflowX: "auto",
         whiteSpace: "nowrap",
         paddingTop: "10px",
+        paddingBottom:"0.5rem",
+        padding:"0.5rem",
         alignItems: "center",
+        borderBottom: "2px solid transparent",
+boxShadow: "0 2px 4px rgba(0,0,0,0.25)"
+
       }}
     >
       {/* CATEGORY */}
