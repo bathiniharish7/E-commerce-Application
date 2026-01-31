@@ -6,12 +6,13 @@
 .homePage{
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.45rem;
+    height: 100%;
 
 }
 
 @media(max-width:500px){
     .homePage{
-        padding: 0 1rem;
+        /* padding: 0 1rem; */
     }
 }
