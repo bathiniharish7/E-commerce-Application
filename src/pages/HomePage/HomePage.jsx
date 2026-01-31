@@ -25,10 +25,6 @@ function HomePage() {
   const workerRef = useRef(null);
   const [searchParams] = useSearchParams();
 
-  // 🛒 Cart from redux
-  const cartProducts = useSelector(
-    (state) => state.cart.cartItems
-  );
 
   // 🔎 URL filters
   const category = searchParams.get("category") || "all";
@@ -148,17 +144,11 @@ function HomePage() {
         <VirtualizedGrid
           data={filteredProducts}
           renderItem={(product) => {
-            const presentInCart = Object.keys(
-              cartProducts
-            ).some(
-              (id) => Number(id) === product.id
-            );
 
             return (
               <ProductCard
                 key={product.id}
                 product={product}
-                presentInCart={presentInCart}
               />
             );
           }}
