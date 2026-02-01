@@ -120,7 +120,7 @@ function HomePage() {
     <div className={styles.homePage}>
       {/* 🔍 Search */}
       <TextField
-        sx={{ }}
+        sx={{margin:"0 0.5rem"}}
         size="small"
         label={`Search products`}
         variant="outlined"

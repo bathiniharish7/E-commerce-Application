@@ -18,10 +18,27 @@ function OrderSummary({ cartProducts, cartProductsList }) {
 
   return (
     <div className={styles.orderSummary}>
-      <h3 className={styles.title}>CART SUMMARY</h3>
+      {/* <h3 className={styles.title}>CART SUMMARY</h3> */}
 
       <TableContainer component={Paper} sx={{ maxHeight: 250 }}>
         <Table stickyHeader size="small">
+          <caption
+            style={{
+              captionSide: "top",
+              fontWeight: 600,
+              fontSize: "1rem",
+              padding: "10px",
+              textAlign: "center",
+
+              backgroundColor: "#5f94ea",
+              borderBottom: "2px solid #2d72d9",
+              color: "#fff",
+              letterSpacing: "0.5px"
+            }}
+          >
+            Cart Summary
+          </caption>
+
           <TableHead>
             <TableRow
               sx={{
