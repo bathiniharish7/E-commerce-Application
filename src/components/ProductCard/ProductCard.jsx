@@ -10,7 +10,7 @@ function ProductCard({ product }) {
   const dispatch = useDispatch();
   //Read cart items from Redux
   const cartItems = useSelector((state) => state.cart.cartItems);
-  
+
   //Calculate quantity from cart
   const quantity = cartItems[product.id]?.quantity || 0;
 
@@ -23,6 +23,7 @@ function ProductCard({ product }) {
       <div className={styles.contentWrapper}>
         <div>
           <h4 className={styles.title}>{product.title}</h4>
+          <span className={styles.category}>{product.category}</span>
           <div className={styles.ratingContainer}>
             <Rating name="read-only" value={product.rating} readOnly precision={0.5} />
             <span className={styles.rating}>{product.rating}</span>

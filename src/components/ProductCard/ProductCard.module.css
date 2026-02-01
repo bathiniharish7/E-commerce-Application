@@ -59,7 +59,19 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 3em;   /* keeps equal height */
+  min-height: 3em;
+  /* keeps equal height */
+}
+
+.category {
+  font-size: 0.8rem;
+  background-color: rgb(247, 215, 173);
+  padding: 0.2rem 1rem;
+  border-radius: 0.2rem;
+  display: inline-block;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+  text-transform: capitalize;
 }
 
 
@@ -70,6 +82,7 @@
     align-items: flex-start;
     width: 100%;
     max-width: none;
+    align-items: center;
   }
 
   .imageWrapper {
@@ -89,7 +102,7 @@
     padding-left: 1rem;
     align-items: flex-start;
     text-align: left;
-    
+
   }
 
   .title {
