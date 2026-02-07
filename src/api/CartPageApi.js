@@ -1,5 +1,7 @@
 import axios from "axios";
+import api from "./api-configuartion";
 
-export const fetchProductDetails = (id) =>
-  axios.get(`https://dummyjson.com/products/${id}`)
-       .then(res => res.data);
+export const fetchProductDetails = async (id) => {
+  const res = await api.get(`/products/${id}`);
+  return res.data;
+};

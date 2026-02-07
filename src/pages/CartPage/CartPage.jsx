@@ -1,5 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
+import { useQueries } from "@tanstack/react-query";
+
 import GridLayout from "../../components/Grid/Grid";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
@@ -8,51 +10,40 @@ import Loader from "../../components/Loader/Loader";
 import styles from "./CartPage.module.css";
 
 import { fetchProductDetails } from "../../api/CartPageApi";
+import { STALE_TIME } from "../../api/api-configuartion";
 
 function CartPage() {
   const cartItems = useSelector((state) => state.cart.cartItems);
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-
   // get product ids
-  const productIds = useMemo(
-    () => Object.keys(cartItems),
-    []
-  );
+  const productIds = useMemo(() => Object.keys(cartItems), [cartItems]);
 
-  // call API only once when cart is opened
-  useEffect(() => {
-    if (productIds.length === 0) return;
+  // one query per product (best practice)
+  const productQueries = useQueries({
+    queries: productIds.map((id) => ({
+      queryKey: ["product", id],
+      queryFn: () => fetchProductDetails(id),
+      staleTime: STALE_TIME.SHORT,
+      // enabled: !!id,
+    })),
+  });
 
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const results = await Promise.allSettled(
-          productIds.map((id) => fetchProductDetails(id))
-        );
+  // loading state
+  const isLoading = productQueries.some((q) => q.isLoading);
 
-        const successProducts = results
-          .filter((r) => r.status === "fulfilled")
-          .map((r) => r.value);
+  // collect products
+  const products = productQueries
+    .filter((q) => q.data)
+    .map((q) => q.data);
 
-        setProducts(successProducts);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  // ✅ FILTER UI BASED ON REDUX
+  // filter based on redux quantity
   const visibleProducts = useMemo(() => {
     return products.filter(
       (product) => cartItems[product.id]?.quantity > 0
     );
   }, [products, cartItems]);
 
-  if (loading) return <Loader />;
+  if (isLoading) return <Loader />;
   if (visibleProducts.length === 0) return <CartEmpty />;
 
   return (

@@ -16,6 +16,7 @@ import FilterComponent from "../../components/Filter/FilterComponent";
 import NoProducts from "../../components/NoProducts/NoProducts";
 import { useSearchParams } from "react-router-dom";
 import VirtualizedGrid from "../../components/VirtualizedGrid/VirtualizedGrid";
+import { STALE_TIME } from "../../api/api-configuartion";
 
 function HomePage() {
   const [input, setInput] = useState("");
@@ -55,7 +56,7 @@ function HomePage() {
         ? searchProducts(input.trim())
         : fetchProducts(),
     select: (data) => data.products,
-    staleTime: 1000 * 60 * 5,
+    staleTime: STALE_TIME.MEDIUM,
     keepPreviousData: true,
   });
 
