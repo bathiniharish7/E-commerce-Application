@@ -6,23 +6,23 @@ import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
 import { useSearchParams } from "react-router-dom";
 
-function FilterComponent() {
+function FilterComponent({categories=[]}) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const category = searchParams.get("category") || "all";
   const priceRange = searchParams.get("price") || "all";
   const rating = searchParams.get("rating") || "all";
 
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   // ---------------------------
   // Fetch categories
   // ---------------------------
-  useEffect(() => {
-    fetch("https://dummyjson.com/products/category-list")
-      .then((res) => res.json())
-      .then((data) => setCategories(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("https://dummyjson.com/products/category-list")
+  //     .then((res) => res.json())
+  //     .then((data) => setCategories(data));
+  // }, []);
 
   // ---------------------------
   // Update URL
@@ -136,4 +136,4 @@ boxShadow: "0 2px 4px rgba(0,0,0,0.25)"
   );
 }
 
-export default FilterComponent;
+export default React.memo(FilterComponent);

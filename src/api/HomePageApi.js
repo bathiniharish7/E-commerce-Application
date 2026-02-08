@@ -1,12 +1,21 @@
-export const fetchProducts=async()=>{
-    const res = await fetch('https://dummyjson.com/products?limit=400');
-    const data =await res.json();
-    return data;
-}
+import api from "./api-configuartion";
 
-export const searchProducts=async(input)=>{
-    const res = await fetch(`https://dummyjson.com/products/search?q=${input}`);
-    const data =await res.json();
-    return data;
-}
+// Fetch all products
+export const fetchProducts = async () => {
+  const res = await api.get("/products?limit=400");
+  return res.data;
+};
+
+// Search products
+export const searchProducts = async (input) => {
+  const res = await api.get(`/products/search?q=${input}`);
+  return res.data;
+};
+
+// Fetch categories list
+export const fetchCategories = async () => {
+  const res = await api.get("/products/category-list");
+  return res.data;
+};
+
 

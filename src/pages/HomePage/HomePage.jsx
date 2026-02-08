@@ -5,7 +5,7 @@ import React, {
   useState,
 } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchProducts, searchProducts } from "../../api/HomePageApi";
+import { fetchCategories, fetchProducts, searchProducts } from "../../api/HomePageApi";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import styles from "./HomePage.module.css";
 import { TextField } from "@mui/material";
@@ -59,6 +59,15 @@ function HomePage() {
     staleTime: STALE_TIME.MEDIUM,
     keepPreviousData: true,
   });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    staleTime: STALE_TIME.MEDIUM
+  })
+
+  console.log(categories);
+
 
   const products = data || [];
 
@@ -121,7 +130,7 @@ function HomePage() {
     <div className={styles.homePage}>
       {/* 🔍 Search */}
       <TextField
-        sx={{margin:"0 0.5rem"}}
+        sx={{ margin: "0 0.5rem" }}
         size="small"
         label={`Search products`}
         variant="outlined"
@@ -129,7 +138,7 @@ function HomePage() {
       />
 
       {/* 🎯 Filters */}
-      {!isLoading && <FilterComponent />}
+      {!isLoading && <FilterComponent categories={categories} />}
 
       {/* 🚫 No Products */}
       {!isLoading &&
