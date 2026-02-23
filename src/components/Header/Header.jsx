@@ -23,8 +23,9 @@ function Header() {
           <li >
             <NavLink
               to="/"
-              className={styles.logoContainer
-              }
+              style={{textDecoration:"none"}}
+              // className={styles.logoContainer
+              // }
             >
               <div className={styles.logoContainer}>
                 <ShoppingBagOutlinedIcon sx={{
