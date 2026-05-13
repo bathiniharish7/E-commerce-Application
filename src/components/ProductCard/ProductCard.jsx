@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { addToCart, decreaseQuantity, increaseQuantity } from '../../redux/cartSlice/cartSlice';
 import CircularProgress from '@mui/material/CircularProgress';
+import { notifyError, notifySuccess } from '../../utils/notification';
 function ProductCard({ product }) {
 
   const dispatch = useDispatch();
@@ -27,25 +28,28 @@ function ProductCard({ product }) {
     setTimeout(() => {
       dispatch(addToCart(productId));
       setLoading(false);
+      notifySuccess("Product added to cart")
     }, loadingTime);
 
   }
 
-   // Simulating real API call delay
+  // Simulating real API call delay
   const handleIncrement = (productId) => {
     setLoading(true);
     setTimeout(() => {
       dispatch(increaseQuantity(productId))
       setLoading(false);
+      notifySuccess("Product added to cart")
     }, loadingTime);
   }
 
-   // Simulating real API call delay
+  // Simulating real API call delay
   const handleDecrement = (productId) => {
     setLoading(true);
     setTimeout(() => {
       dispatch(decreaseQuantity(productId));
       setLoading(false);
+      notifyError("Product removed from cart")
     }, loadingTime);
   }
   return (
