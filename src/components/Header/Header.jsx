@@ -58,6 +58,7 @@ function Header() {
           </li>
           <li className={styles.link}>
             <NavLink
+            aria-label={`Shopping cart with ${totalProducts} item${totalProducts !== 1 ? "s" : ""}`}
               to="/cart"
               className={({ isActive }) =>
                 `${styles.linkItem} ${isActive ? styles.active : ''}`
