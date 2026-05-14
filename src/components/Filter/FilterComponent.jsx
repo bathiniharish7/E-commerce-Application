@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -6,26 +6,15 @@ import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
 import { useSearchParams } from "react-router-dom";
 
-function FilterComponent({categories=[]}) {
+function FilterComponent({ categories = [] }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const category = searchParams.get("category") || "all";
   const priceRange = searchParams.get("price") || "all";
   const rating = searchParams.get("rating") || "all";
 
-  // const [categories, setCategories] = useState([]);
-
   // ---------------------------
-  // Fetch categories
-  // ---------------------------
-  // useEffect(() => {
-  //   fetch("https://dummyjson.com/products/category-list")
-  //     .then((res) => res.json())
-  //     .then((data) => setCategories(data));
-  // }, []);
-
-  // ---------------------------
-  // Update URL
+  // Update URL Params
   // ---------------------------
   const updateParam = (key, value) => {
     const params = new URLSearchParams(searchParams);
@@ -39,6 +28,9 @@ function FilterComponent({categories=[]}) {
     setSearchParams(params);
   };
 
+  // ---------------------------
+  // Reset Filters
+  // ---------------------------
   const resetFilters = () => {
     setSearchParams({});
   };
@@ -55,24 +47,24 @@ function FilterComponent({categories=[]}) {
         gap: "16px",
         overflowX: "auto",
         whiteSpace: "nowrap",
+        padding: "0.5rem",
         paddingTop: "10px",
-        paddingBottom:"0.5rem",
-        padding:"0.5rem",
+        paddingBottom: "0.5rem",
         alignItems: "center",
         borderBottom: "2px solid transparent",
-boxShadow: "0 2px 4px rgba(0,0,0,0.25)"
-
+        boxShadow: "0 2px 4px rgba(0,0,0,0.25)",
       }}
     >
       {/* CATEGORY */}
       <FormControl size="small" sx={{ minWidth: 160 }}>
-        <InputLabel>Category</InputLabel>
+        <InputLabel id="category-select-label">Category</InputLabel>
         <Select
-          label="Category"
+          id="category-select"
+          labelId="category-select-label"
+          aria-label="Category"
           value={category}
-          onChange={(e) =>
-            updateParam("category", e.target.value)
-          }
+          label="Category"
+          onChange={(e) => updateParam("category", e.target.value)}
         >
           <MenuItem value="all">All</MenuItem>
           {categories.map((cat) => (
@@ -85,13 +77,14 @@ boxShadow: "0 2px 4px rgba(0,0,0,0.25)"
 
       {/* PRICE */}
       <FormControl size="small" sx={{ minWidth: 170 }}>
-        <InputLabel>Price</InputLabel>
+        <InputLabel id="price-select-label">Price</InputLabel>
         <Select
-          label="Price"
+          id="price-select"
+          labelId="price-select-label"
+          aria-label="Price"
           value={priceRange}
-          onChange={(e) =>
-            updateParam("price", e.target.value)
-          }
+          label="Price"
+          onChange={(e) => updateParam("price", e.target.value)}
         >
           <MenuItem value="all">All</MenuItem>
           <MenuItem value="0-2000">₹0 – ₹2,000</MenuItem>
@@ -106,13 +99,14 @@ boxShadow: "0 2px 4px rgba(0,0,0,0.25)"
 
       {/* RATING */}
       <FormControl size="small" sx={{ minWidth: 160 }}>
-        <InputLabel>Rating</InputLabel>
+        <InputLabel id="rating-select-label">Rating</InputLabel>
         <Select
-          label="Rating"
+          id="rating-select"
+          labelId="rating-select-label"
+          aria-label="Rating"
           value={rating}
-          onChange={(e) =>
-            updateParam("rating", e.target.value)
-          }
+          label="Rating"
+          onChange={(e) => updateParam("rating", e.target.value)}
         >
           <MenuItem value="all">All</MenuItem>
           <MenuItem value="4">⭐ 4 & above</MenuItem>
@@ -122,11 +116,12 @@ boxShadow: "0 2px 4px rgba(0,0,0,0.25)"
         </Select>
       </FormControl>
 
-      {/* RESET */}
+      {/* RESET BUTTON */}
       {isAnyFilterApplied && (
         <Button
           variant="outlined"
           onClick={resetFilters}
+          aria-label="Reset all filters"
           sx={{ color: "#3d4042" }}
         >
           Reset

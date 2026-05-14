@@ -88,9 +88,9 @@ function ProductCard({ product }) {
             },
           }}
         >
-          <Button onClick={() => handleDecrement(product.id)} disabled={loading === true}><RemoveIcon /> </Button>
+          <Button aria-label='Remove item from cart' onClick={() => handleDecrement(product.id)} disabled={loading === true}><RemoveIcon /> </Button>
           <Button disabled={loading === true} >{loading ? <CircularProgress size={22} /> : quantity}</Button>
-          <Button onClick={() => handleIncrement(product.id)} disabled={loading === true}><AddIcon /></Button>
+          <Button aria-label='Add item into cart' onClick={() => handleIncrement(product.id)} disabled={loading === true}><AddIcon /></Button>
         </ButtonGroup>}
 
 
